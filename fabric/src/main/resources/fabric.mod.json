@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "stack_mob",
+  "version": "${version}",
+  "name": "StackMob",
+  "description": "",
+  "authors": [
+    "SJKZ1"
+  ],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "sjkz1.com.stack_mob.fabric.StackMobFabric"
+    ]
+  },
+  "mixins": [
+    "stack_mob.mixins.json",
+    "stack_mob-common.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.9",
+    "minecraft": ">=1.19.2"
+  }
+}

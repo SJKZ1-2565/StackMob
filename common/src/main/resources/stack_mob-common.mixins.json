@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "sjkz1.com.stack_mob.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "PigMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

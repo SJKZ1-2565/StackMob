@@ -8,7 +8,7 @@ public class StackMob {
     public static final String MOD_ID = "stack_mob";
 
     public static void init() {
-
+        System.out.println(MOD_ID + " is running...");
     }
 
     public static Component stackedEntityName(long count,String typeName)

@@ -1,9 +1,9 @@
 package sjkz1.com.stack_mob.forge;
 
 import dev.architectury.platform.forge.EventBuses;
-import sjkz1.com.stack_mob.StackMob;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import sjkz1.com.stack_mob.StackMob;
 
 @Mod(StackMob.MOD_ID)
 public class StackMobForge {

@@ -1,11 +1,9 @@
 package sjkz1.com.stack_mob.mixin;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ItemSteerable;
 import net.minecraft.world.entity.Saddleable;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.level.Level;
@@ -17,8 +15,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import sjkz1.com.stack_mob.StackMob;
 
-import java.util.function.Predicate;
-
 @Mixin(Pig.class)
 public abstract class PigMixin extends Animal
         implements ItemSteerable,
@@ -26,6 +22,7 @@ public abstract class PigMixin extends Animal
     protected PigMixin(EntityType<? extends Animal> entityType, Level level) {
         super(entityType, level);
     }
+
     @Unique
     private long realCount = 1;
     @Unique
@@ -34,7 +31,7 @@ public abstract class PigMixin extends Animal
     @Override
     public void aiStep() {
         super.aiStep();
-        if(!this.hasCustomName() && this.isAlive()) {
+        if (!this.hasCustomName() && this.isAlive()) {
             this.setCustomNameVisible(true);
             this.setCustomName(StackMob.stackedEntityName(this.getRealCount(), this.getTypeName().getString()));
         }
@@ -47,23 +44,20 @@ public abstract class PigMixin extends Animal
         if (this.getRealCount() <= 0) {
             this.setRealCount(1);
         }
-        if(this.isInLove() && this.getRealCount() > 1)
-        {
+        if (this.isInLove() && this.getRealCount() > 1) {
             PigMixin pig = (PigMixin) this.getType().create(this.level);
             this.setRealCount(this.getRealCount() - 1);
-            pig.moveTo(this.getX() , this.getY(), this.getZ());
+            pig.moveTo(this.getX(), this.getY(), this.getZ());
             this.setCoolDown(6000);
             pig.setCoolDown(6000);
             this.setCustomName(StackMob.stackedEntityName(this.getRealCount(), this.getTypeName().getString()));
             pig.setCustomName(StackMob.stackedEntityName(pig.getRealCount(), pig.getTypeName().getString()));
             this.level.addFreshEntity(pig);
         }
-        var otherPig = this.level.getEntitiesOfClass(PigMixin.class,this.getBoundingBox().inflate(16.0d),pigMixin -> !pigMixin.isBaby());
-        for(var pigs : otherPig)
-        {
-            if(pigs != this && (!this.isRemoved() || !pigs.isRemoved()) && (this.getRealCount() >= pigs.getRealCount()) && !this.isBaby())
-            {
-                if(this.getCoolDown() == 1) {
+        var otherPig = this.level.getEntitiesOfClass(PigMixin.class, this.getBoundingBox().inflate(16.0d), pigMixin -> !pigMixin.isBaby());
+        for (var pigs : otherPig) {
+            if (pigs != this && (!this.isRemoved() || !pigs.isRemoved()) && (this.getRealCount() >= pigs.getRealCount()) && !this.isBaby()) {
+                if (this.getCoolDown() == 1) {
                     pigs.discard();
                     this.setRealCount(this.getRealCount() + pigs.getRealCount());
                     this.setCustomName(StackMob.stackedEntityName(this.getRealCount(), this.getTypeName().getString()));
@@ -80,22 +74,23 @@ public abstract class PigMixin extends Animal
             {
                 PigMixin pig = (PigMixin) this.getType().create(this.level);
                 pig.setRealCount(i - 1);
-                pig.moveTo(this.getX() , this.getY(), this.getZ());
+                pig.moveTo(this.getX(), this.getY(), this.getZ());
                 this.level.addFreshEntity(pig);
             }
         }
     }
 
-    @Inject(method = "addAdditionalSaveData",at = @At(value = "TAIL"))
+    @Inject(method = "addAdditionalSaveData", at = @At(value = "TAIL"))
     public void addAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci) {
         compoundTag.putLong("RealCount", this.realCount);
-        compoundTag.putInt("CoolDown", this.coolDown);
+        compoundTag.putLong("RealCount", this.realCount);
     }
 
-    @Inject(method = "readAdditionalSaveData",at = @At(value = "TAIL"))
+    @Inject(method = "readAdditionalSaveData", at = @At(value = "TAIL"))
     public void readAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci) {
         this.realCount = compoundTag.getLong("RealCount");
         this.coolDown = compoundTag.getInt("CoolDown");
+
     }
 
     public void setRealCount(long realCount) {
@@ -113,4 +108,5 @@ public abstract class PigMixin extends Animal
     public void setCoolDown(int coolDown) {
         this.coolDown = coolDown;
     }
+
 }
